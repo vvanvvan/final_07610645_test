@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_food_2_2021/models/api_result.dart';
+import 'package:flutter_food_2_2021/models/food_item.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, dynamic>> _foodData = [];
+  List<FoodItem> _foodData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,21 +43,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   _handleClickButton() async {
-    final url = Uri.parse('https://cpsu-test-api.herokuapp.com/foods');
+    final url = Uri.parse('https://cpsu-test-api.herokuapp.com/foods?id=1');
     var result = await http.get(url);
     //print(result.body);
 
     var json = jsonDecode(result.body);
-    String status = json['status'];
+    var apiResult = ApiResult.fromJson(json);
+
+    /*String status = json['status'];
     String? message = json['message'];
-    List<dynamic> data = json['data'];
+    List<dynamic> data = json['data'];*/
 
     //print('Status: $status, Message: $message, Number of food: ${data.length}');
 
     setState(() {
-      for (var element in data) {
-        _foodData.add(element);
-      }
+      _foodData = apiResult.data.map<FoodItem>((item) => FoodItem.fromJson(item)).toList();
+
+      /*for (var element in apiResult.data) {
+        var foodItem = FoodItem.fromJson(element);
+        _foodData.add(foodItem);
+      }*/
     });
   }
 
@@ -72,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           children: <Widget>[
             Image.network(
-              foodItem['image'],
+              foodItem.image,
               width: 80.0,
               height: 80.0,
               fit: BoxFit.cover,
@@ -87,11 +94,11 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          foodItem['name'],
+                          foodItem.name,
                           style: GoogleFonts.prompt(fontSize: 20.0),
                         ),
                         Text(
-                          '${foodItem['price'].toString()} บาท',
+                          '${foodItem.price.toString()} บาท',
                           style: GoogleFonts.prompt(fontSize: 15.0),
                         ),
                       ],
