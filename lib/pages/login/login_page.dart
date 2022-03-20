@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_food_2_2021/models/api_result.dart';
-import 'package:flutter_food_2_2021/pages/home/home_page.dart';
+import 'package:flutter_food_2_2021/pages/food/food_list_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
       if (loginSuccess) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const FoodListPage()),
         );
       } else {
         _showOkDialog(context, 'Incorrect PIN', 'Please try again');
@@ -185,6 +185,22 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
     final url = Uri.parse('https://cpsu-test-api.herokuapp.com/login');
+
+    /*var list = [];
+    list.add({
+      'name': 'abc',
+      'value': 111,
+    });
+    list.add({
+      'name': 'xyz',
+      'value': 222,
+    });
+
+    Map<String, dynamic> requestMap = {};
+    requestMap['list'] = list;
+
+    print(jsonEncode(requestMap));*/
+
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},

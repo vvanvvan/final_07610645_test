@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_food_2_2021/pages/food/food_list_page.dart';
 import 'package:flutter_food_2_2021/pages/login/login_page.dart';
 
 void main() {
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginPage(),
+      home: const FoodListPage(),
     );
   }
 }

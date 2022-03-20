@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_food_2_2021/models/api_result.dart';
 import 'package:flutter_food_2_2021/models/food_item.dart';
+import 'package:flutter_food_2_2021/pages/food/food_data.dart';
+import 'package:flutter_food_2_2021/pages/food/food_details_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class FoodListPage extends StatefulWidget {
+  const FoodListPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<FoodListPage> createState() => _FoodListPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  List<FoodItem> _foodData = [];
+class _FoodListPageState extends State<FoodListPage> {
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFoods();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,33 +29,37 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('FLUTTER FOOD'),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
+          ListView.builder(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: _handleClickButton,
-              child: const Text('LOAD FOODS DATA'),
-            ),
+            itemCount: FoodData.list.length,
+            itemBuilder: (context, index) => _buildListItem(context, index),
           ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              itemCount: _foodData.length,
-              itemBuilder: (context, index) => _buildListItem(context, index),
+          if (_isLoading)
+            const Center(
+              child: SizedBox(
+                width: 40.0,
+                height: 40.0,
+                child: CircularProgressIndicator(),
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  _handleClickButton() async {
-    final url = Uri.parse('https://cpsu-test-api.herokuapp.com/foods?id=1');
-    var result = await http.get(url);
-    //print(result.body);
+  _loadFoods() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final url = Uri.parse('https://cpsu-test-api.herokuapp.com/foods');
+    var response = await http.get(url);
+    setState(() {
+      _isLoading = false;
+    });
 
-    var json = jsonDecode(result.body);
+    var json = jsonDecode(response.body);
     var apiResult = ApiResult.fromJson(json);
 
     /*String status = json['status'];
@@ -57,7 +69,9 @@ class _HomePageState extends State<HomePage> {
     //print('Status: $status, Message: $message, Number of food: ${data.length}');
 
     setState(() {
-      _foodData = apiResult.data.map<FoodItem>((item) => FoodItem.fromJson(item)).toList();
+      FoodData.list = apiResult.data
+          .map<FoodItem>((item) => FoodItem.fromJson(item))
+          .toList();
 
       /*for (var element in apiResult.data) {
         var foodItem = FoodItem.fromJson(element);
@@ -67,7 +81,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildListItem(BuildContext context, int index) {
-    var foodItem = _foodData[index];
+    var foodItem = FoodData.list[index];
 
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -75,7 +89,9 @@ class _HomePageState extends State<HomePage> {
       elevation: 5.0,
       shadowColor: Colors.black.withOpacity(0.2),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          _handleClickItem(index);
+        },
         child: Row(
           children: <Widget>[
             Image.network(
@@ -110,6 +126,13 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _handleClickItem(int foodIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => FoodDetailsPage(foodIndex: foodIndex)),
     );
   }
 }
