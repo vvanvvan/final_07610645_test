@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_food_2_2021/pages/home/home_page.dart';
+import 'package:flutter_food_2_2021/pages/login/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,11 +14,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Food',
       theme: ThemeData(
-        primarySwatch: Colors.amber,
+        primarySwatch: Colors.purple,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textTheme: const TextTheme(
+          headline1: TextStyle(
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+          ),
+          headline6: TextStyle(
+            fontSize: 22.0,
+            //fontWeight: FontWeight.bold,
+          ),
+          bodyText2: TextStyle(
+            fontSize: 14.0,
+          ),
+        ),
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
-
-
