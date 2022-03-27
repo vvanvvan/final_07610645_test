@@ -16,6 +16,7 @@ class FoodListPage extends StatefulWidget {
 
 class _FoodListPageState extends State<FoodListPage> {
   var _isLoading = false;
+  ////List<String> _foodData = [];
 
   @override
   void initState() {
@@ -26,9 +27,9 @@ class _FoodListPageState extends State<FoodListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FLUTTER FOOD'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('FLUTTER FOOD'),
+      // ),
       body: Stack(
         children: [
           ListView.builder(
@@ -53,8 +54,9 @@ class _FoodListPageState extends State<FoodListPage> {
     setState(() {
       _isLoading = true;
     });
-    final url = Uri.parse('https://cpsu-test-api.herokuapp.com/foods');
-    var response = await http.get(url);
+    final url = Uri.parse('https://cpsu-test-api.herokuapp.com/quizzes');
+    var response = await http.get(url, headers: {'id': '07610645'});
+
     setState(() {
       _isLoading = false;
     });
@@ -62,11 +64,11 @@ class _FoodListPageState extends State<FoodListPage> {
     var json = jsonDecode(response.body);
     var apiResult = ApiResult.fromJson(json);
 
-    /*String status = json['status'];
+    String status = json['status'];
     String? message = json['message'];
-    List<dynamic> data = json['data'];*/
+    List<dynamic> data = json['data'];
 
-    //print('Status: $status, Message: $message, Number of food: ${data.length}');
+    print('Status: $status, Message: $message, Number of food: ${data.length}');
 
     setState(() {
       FoodData.list = apiResult.data
@@ -110,13 +112,13 @@ class _FoodListPageState extends State<FoodListPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          foodItem.name,
+                          foodItem.choice.toString(),
                           style: GoogleFonts.prompt(fontSize: 20.0),
                         ),
-                        Text(
-                          '${foodItem.price.toString()} บาท',
-                          style: GoogleFonts.prompt(fontSize: 15.0),
-                        ),
+                        // Text(
+                        //   '${foodItem.price.toString()} บาท',
+                        //   style: GoogleFonts.prompt(fontSize: 15.0),
+                        // ),
                       ],
                     ),
                   ],

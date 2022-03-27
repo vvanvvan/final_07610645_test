@@ -25,7 +25,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
     var foodItem = FoodData.list[_foodIndex];
 
     return Scaffold(
-      appBar: AppBar(title: Text('${foodItem.name} ${foodItem.price} บาท')),
+      appBar: AppBar(title: Text('${foodItem.id} ${foodItem.choice}')),
       body: Stack(
         children: [
           Column(
@@ -40,12 +40,12 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  foodItem.name,
+                  foodItem.choice.toString(),
                   style: GoogleFonts.prompt(fontSize: 30.0),
                 ),
               ),
               Text(
-                '${foodItem.price} บาท',
+                '${foodItem.id} บาท',
                 style: GoogleFonts.prompt(fontSize: 20.0),
               ),
             ],
